@@ -1,0 +1,4 @@
+{
+  "cmd": "vagrant ssh -c 'cd /projects/erlang/resm && make compile'",
+  "sh": true
+}

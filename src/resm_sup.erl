@@ -1,4 +1,4 @@
--module(resource_manager_sup).
+-module(resm_sup).
 -behaviour(supervisor).
 
 -export([start_link/0, init/1]).
@@ -10,7 +10,7 @@ start_link() ->
   ok, _ = supervisor:start_link({local, ?MODULE}, ?MODULE, []).
 
 init(_Arg) ->
-  {ok, Resources} = application:get_env(resource_manager, resources),
+  {ok, Resources} = application:get_env(resm, resources),
   ResourceServer = ?CHILD(resource_server, worker, Resources),
 
   {ok, {{one_for_one, 5, 10}, [ResourceServer]}}.

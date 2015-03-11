@@ -1,4 +1,4 @@
-{application, resource_manager,
+{application, resm,
  [
   {description, ""},
   {vsn, "1"},
@@ -6,11 +6,12 @@
   {applications, [
                   kernel,
                   stdlib,
-                  cowboy,
-                  sync
+                  sync,
+                  cowboy
                  ]},
-  {mod, { resource_manager_app, []}},
+  {mod, { resm_app, []}},
   {env, [
-    {resources, {a, b, c}}
+    {resources, [r1, r2, r3]},
+    {port, 8080}
   ]}
  ]}.

@@ -12,7 +12,7 @@ test: compileapp
 	ERL_FLAGS="-config $(CURDIR)/sys" $(REBAR) eu skip_deps=true
 
 run: cleanapp compileapp
-	erl -config $(CURDIR)/sys -pa ebin deps/*/ebin -s resource_manager
+	erl -config $(CURDIR)/sys -pa ebin deps/*/ebin -s resm
 
 get-deps:
 	$(REBAR) get-deps

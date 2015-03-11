@@ -1,4 +1,4 @@
--module(resource_manager_app).
+-module(resm_app).
 
 -behaviour(application).
 
@@ -16,11 +16,12 @@ start(_StartType, _StartArgs) ->
 		]}
 	]),
 
-  {ok, _} = cowboy:start_http(http, 100, [{port, 8080}], [
+  {ok, Port} = application:get_env(resm, port),
+  {ok, _} = cowboy:start_http(http, 100, [{port, Port}], [
 		{env, [{dispatch, Dispatch}]}
 	]),
 
-  ok, _ = resource_manager_sup:start_link().
+  ok, _ = resm_sup:start_link().
 
 stop(_State) ->
   ok.
