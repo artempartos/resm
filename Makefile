@@ -9,7 +9,7 @@ compile:
 	$(REBAR) compile
 
 test: compileapp
-	ERL_FLAGS="-config $(CURDIR)/sys" $(REBAR) eu skip_deps=true
+	ERL_FLAGS="-config $(CURDIR)/sys" $(REBAR) ct skip_deps=true
 
 run: cleanapp compileapp
 	erl -config $(CURDIR)/sys -pa ebin deps/*/ebin -s resm
