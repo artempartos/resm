@@ -6,8 +6,6 @@
 %% ------------------------------------------------------------------
 -export([start_link/1]).
 
--export([allocate/1, deallocate/1, reset/0, list/0, list/1]).
-
 %% ------------------------------------------------------------------
 %% gen_server Function Exports
 %% ------------------------------------------------------------------
@@ -27,15 +25,15 @@ init(Resources) ->
   Deallocated = {deallocated, Resources},
   {ok, {Allocated, Deallocated}}.
 
-handle_call({allocate, User}, _From, State = {Allocated, {deallocated, []}}) ->
+handle_call({allocate, _User}, _From, State = {_, {deallocated, []}}) ->
   {reply, {error, out_of_resource}, State};
 
 handle_call({allocate, User}, _From, {{allocated, AllocatedState}, {deallocated, [Resource | DeallocatedState]}}) ->
   Allocated = {allocated, dict:store(Resource, User, AllocatedState)},
   NewState = {Allocated, {deallocated, DeallocatedState}},
-  {reply, Resource, NewState};
+  {reply, {ok, Resource}, NewState};
 
-handle_call({deallocate, Resource}, _From, State = {Deallocated, {allocated, []}}) ->
+handle_call({deallocate, _Resource}, _From, State = {_Deallocated, {allocated, []}}) ->
   {reply, {error, not_found}, State};
 
 handle_call({deallocate, Resource}, _From, State = {{allocated, AllocatedState}, {deallocated, DeallocatedState}}) ->
@@ -48,7 +46,7 @@ handle_call({deallocate, Resource}, _From, State = {{allocated, AllocatedState},
       {reply, {error, not_found}, State}
   end;
 
-handle_call(reset, _From, State = {{allocated, AllocatedState}, {deallocated, DeallocatedState}}) ->
+handle_call(reset, _From, {{allocated, AllocatedState}, {deallocated, DeallocatedState}}) ->
   Keys = dict:fetch_keys(AllocatedState),
   NewState = {{allocated, dict:new()}, {deallocated, Keys ++ DeallocatedState}},
   {reply, ok, NewState};
@@ -57,7 +55,7 @@ handle_call(list, _From, State = {{allocated, AllocatedState}, {deallocated, Dea
   List = dict:to_list(AllocatedState),
   {reply, {{allocated, List}, {deallocated, DeallocatedState}}, State};
 
-handle_call({list, User}, _From, State = {{allocated, AllocatedState}, {deallocated, DeallocatedState}}) ->
+handle_call({list, User}, _From, State = {{allocated, AllocatedState}, _}) ->
   UserDict = dict:filter(fun(_, Value) -> Value == User end, AllocatedState),
   Keys = dict:fetch_keys(UserDict),
   {reply, Keys, State};
@@ -76,22 +74,3 @@ terminate(_Reason, _State) ->
 
 code_change(_OldVsn, State, _Extra) ->
   {ok, State}.
-
-% State
-% Request
-% Response
-
-allocate(User) ->
-  gen_server:call(?MODULE, {allocate, User}).
-
-deallocate(Resource) ->
-  gen_server:call(?MODULE, {deallocate, Resource}).
-
-reset() ->
-  gen_server:call(?MODULE, reset).
-
-list() ->
-  gen_server:call(?MODULE, list).
-
-list(User) ->
-  gen_server:call(?MODULE, {list, User}).
