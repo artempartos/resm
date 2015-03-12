@@ -1,4 +1,4 @@
--module(allocate_handler).
+-module(deallocate_handler).
 
 -export([init/2]).
 
@@ -7,22 +7,21 @@ init(Req, Opts) ->
 	process(Method, Req, Opts).
 
 process(<<"GET">>, Req, Opts) ->
-	User = erlang:binary_to_atom(cowboy_req:binding(user, Req), utf8),
-	case resm:allocate(User) of
-    {ok, Resource} ->
-			Body = erlang:atom_to_binary(Resource, utf8),
-			Status = 201;
+	Resource = erlang:binary_to_atom(cowboy_req:binding(resource, Req), utf8),
+	case resm:deallocate(Resource) of
+    ok ->
+			Body = <<>>,
+			Status = 204;
     {error, Error} ->
 			Body = erlang:atom_to_binary(Error, utf8),
-			Status = 503
+			Status = 404
 	end,
 	{ok, Req2} = reply(Status, Req, Body),
 	{ok, Req2, Opts};
 
-
 process(_, Req, Opts) ->
 	Body = <<"Bad Request">>,
-	{ok, Req2} = reply(400, Req, Body),
+	{ok, Req2} = reply(404, Req, Body),
 	{ok, Req2, Opts}.
 
 reply(Status, Req, Body) ->

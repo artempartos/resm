@@ -13,6 +13,10 @@ start(_StartType, _StartArgs) ->
   Dispatch = cowboy_router:compile([
 		{'_', [
 			{"/allocate/:user", allocate_handler, []},
+			{"/deallocate/:resource", deallocate_handler, []},
+			{"/reset", reset_handler, []},
+			{"/list/:user", list_user_handler, []},
+			{"/list", list_handler, []},
       {'_', notfound_handler, []}
 		]}
 	]),

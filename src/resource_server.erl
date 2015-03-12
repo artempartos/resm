@@ -34,7 +34,7 @@ handle_call({allocate, User}, _From, {{allocated, AllocatedState}, {deallocated,
   {reply, {ok, Resource}, NewState};
 
 handle_call({deallocate, _Resource}, _From, State = {_Deallocated, {allocated, []}}) ->
-  {reply, {error, not_found}, State};
+  {reply, {error, not_allocated}, State};
 
 handle_call({deallocate, Resource}, _From, State = {{allocated, AllocatedState}, {deallocated, DeallocatedState}}) ->
   case dict:is_key(Resource, AllocatedState) of
@@ -43,7 +43,7 @@ handle_call({deallocate, Resource}, _From, State = {{allocated, AllocatedState},
       NewState = {{allocated, Allocated}, {deallocated, [Resource | DeallocatedState]}},
       {reply, ok, NewState};
     false ->
-      {reply, {error, not_found}, State}
+      {reply, {error, not_allocated}, State}
   end;
 
 handle_call(reset, _From, {{allocated, AllocatedState}, {deallocated, DeallocatedState}}) ->

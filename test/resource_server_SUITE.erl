@@ -74,7 +74,7 @@ test_fail_deallocate_resource(_Config) ->
   {ok, Resource} = resm:allocate(partos),
   ok = resm:deallocate(Resource),
   Response = resm:deallocate(Resource),
-  ?assertEqual({error, not_found}, Response).
+  ?assertEqual({error, not_allocated}, Response).
 
 test_reset_resources(_Config) ->
   StartState = resm:list(),
