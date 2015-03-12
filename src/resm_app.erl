@@ -12,13 +12,15 @@
 start(_StartType, _StartArgs) ->
   Dispatch = cowboy_router:compile([
 		{'_', [
-			{"/", main_handler, []}
+			{"/allocate/:user", allocate_handler, []},
+      {'_', notfound_handler, []}
 		]}
 	]),
 
   {ok, Port} = application:get_env(resm, port),
-  {ok, _} = cowboy:start_http(http, 100, [{port, Port}], [
-		{env, [{dispatch, Dispatch}]}
+  {ok, _} = cowboy:start_http(http, 100,
+    [{port, Port}],
+    [{env, [{dispatch, Dispatch}]}
 	]),
 
   ok, _ = resm_sup:start_link().
