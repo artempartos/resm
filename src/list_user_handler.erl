@@ -10,12 +10,12 @@ process(<<"GET">>, Req, Opts) ->
 	User = erlang:binary_to_atom(cowboy_req:binding(user, Req), utf8),
 	List = resm:list(User),
 	Body = jsx:encode(List),
-	{ok, Req2} = reply(200, Req, Body),
+	Req2 = reply(200, Req, Body),
 	{ok, Req2, Opts};
 
 process(Method, Req, Opts) ->
 	Body = <<"Bad Request">>,
-	{ok, Req2} = reply(400, Req, Body),
+	Req2 = reply(400, Req, Body),
 	{ok, Req2, Opts}.
 
 reply(Status, Req, Body) ->

@@ -8,12 +8,12 @@ init(Req, Opts) ->
 
 process(<<"GET">>, Req, Opts) ->
 	resm:reset(),
-	{ok, Req2} = reply(204, Req, <<>>),
+	Req2 = reply(204, Req, <<>>),
 	{ok, Req2, Opts};
 
 process(_, Req, Opts) ->
 	Body = <<"Bad Request">>,
-	{ok, Req2} = reply(404, Req, Body),
+	Req2 = reply(404, Req, Body),
 	{ok, Req2, Opts}.
 
 reply(Status, Req, Body) ->

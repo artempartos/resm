@@ -16,13 +16,13 @@ process(<<"GET">>, Req, Opts) ->
 			Body = erlang:atom_to_binary(Error, utf8),
 			Status = 503
 	end,
-	{ok, Req2} = reply(Status, Req, Body),
+	Req2 = reply(Status, Req, Body),
 	{ok, Req2, Opts};
 
 
 process(_, Req, Opts) ->
 	Body = <<"Bad Request">>,
-	{ok, Req2} = reply(400, Req, Body),
+	Req2 = reply(400, Req, Body),
 	{ok, Req2, Opts}.
 
 reply(Status, Req, Body) ->
