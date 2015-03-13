@@ -1,16 +1,13 @@
-{application, resm,
- [
+{application, resm, [
   {description, ""},
   {vsn, "1"},
   {registered, []},
-  {applications, [
-                  kernel,
-                  stdlib,
-                  cowboy
-                 ]},
+  {applications, [ kernel, stdlib, cowboy ]},
+  {modules, []},
   {mod, { resm_app, []}},
   {env, [
     {resources, [r1, r2, r3]},
     {port, 8080}
-  ]}
+  ]},
+  {registered, [resm]}
  ]}.

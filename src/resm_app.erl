@@ -3,13 +3,20 @@
 -behaviour(application).
 
 %% Application callbacks
--export([start/2, stop/1]).
+-export([start/2, stop/1, start_cowboy/0]).
 
 %% ===================================================================
 %% Application callbacks
 %% ===================================================================
 
 start(_StartType, _StartArgs) ->
+  ok, _ = start_cowboy(),
+  ok, _ = resm_sup:start_link().
+
+stop(_State) ->
+  ok.
+
+start_cowboy() ->
   Dispatch = cowboy_router:compile([
 		{'_', [
 			{"/allocate/:user", allocate_handler, []},
@@ -21,13 +28,12 @@ start(_StartType, _StartArgs) ->
 		]}
 	]),
 
+
+
   {ok, Port} = application:get_env(resm, port),
+  Env = [{env, [{dispatch, Dispatch}]}],
+
   {ok, _} = cowboy:start_http(http, 100,
     [{port, Port}],
-    [{env, [{dispatch, Dispatch}]}
-	]),
-
-  ok, _ = resm_sup:start_link().
-
-stop(_State) ->
-  ok.
+    Env
+	).
