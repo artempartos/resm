@@ -12,7 +12,7 @@ process(<<"GET">>, Req, Opts) ->
 	Req2 = reply(200, Req, Body),
 	{ok, Req2, Opts};
 
-process(Method, Req, Opts) ->
+process(_Method, Req, Opts) ->
 	Body = <<"Bad Request">>,
 	Req2 = reply(400, Req, Body),
 	{ok, Req2, Opts}.

@@ -1,6 +1,7 @@
-{application, resm, [
-  {description, ""},
-  {vsn, "1"},
+{application, resm,
+ [
+  {description, "Resource manager"},
+  {vsn, git},
   {registered, []},
   {applications, [ kernel, stdlib, cowboy ]},
   {modules, []},

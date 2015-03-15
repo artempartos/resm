@@ -33,6 +33,9 @@ start_cowboy() ->
   {ok, Port} = application:get_env(resm, port),
   Env = [{env, [{dispatch, Dispatch}]}],
 
+  erlang:display("resource manager started on port"),
+  erlang:display(Port),
+
   {ok, _} = cowboy:start_http(http, 100,
     [{port, Port}],
     Env

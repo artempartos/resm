@@ -3,7 +3,11 @@
 *~
 /deps
 /ebin
+/build
+/resm
+/apps/*/ebin
 .rebar/
 .eunit/
 logs/
 *.beam
+erl_crash.dump
