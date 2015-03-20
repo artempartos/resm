@@ -5,10 +5,13 @@
       LC_ALL: en_US.UTF-8
       LC_LCTYPE: en_US.UTF-8
       LC_MESSAGES: POSIX
+    rvm1_rubies:
+      - 'ruby-2.1.0'
+    rvm1_rvm_check_for_updates: false
+    rvm1_gpg_key_server: '213.133.103.71'
 
   roles:
-    - shared
-    - { role: azavea.ruby, tags: ruby, sudo: True, ruby_version: 2.1 }
+    - { role: rvm_io.rvm1-ruby, tags: ruby, sudo: True }
     - { role: ANXS.erlang, tags: erlang, sudo: True, erlang_version: "17.4" }
 
   tasks:
@@ -20,5 +23,16 @@
         - python-pycurl
         - python-apt
         - curl
-        - libcurl4-gnutls-dev
         - git
+        - ruby-dev
+        - gcc
+
+    - name: install fpm
+      sudo: True
+      gem: name=fpm version=1.3.3 state=present user_install=no
+
+    - name: symlink resm path
+      file: src=/vagrant dest=~/resm state=link
+
+    - name: install dependencies
+      shell: make chdir=~/resm
