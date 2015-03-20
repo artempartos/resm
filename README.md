@@ -2,17 +2,29 @@
 simple resource manager
 
 ## Installation guide
--  [Install erlang/OTP](http://www.erlang.org/doc/installation_guide/INSTALL.html)
-- Fetch and compile dependencies
+- [install vagrant](https://docs.vagrantup.com/v2/installation/index.html)
+- install vagrant-vbguest plugin
 ```
-make
+vagrant plugin install vagrant-vbguest
 ```
+-  [install ansible](http://docs.ansible.com/intro_installation.html)
+- install ansible-galaxy plugins (ANXS.erlang, rvm_io.rvm1-ruby). In project directory:
+```
+ansible-galaxy install -r provision/requirements.yml  --force
+```
+
+- up virtual host: in box ubuntu trusty 14.04x64, will have address 192.168.10.10. In project directory:
+```
+vagrant up
+```
+(need root password for nfs sync).
+This command install erlang, ruby, fpm, resm dependencies
+
 - Check that tests is ok
 ```
 make test
 ```
 - Run RESM application (default port: 8080, default resources: [r1,r2,r3], configurable in apps/resm/src/resm.app.src )
-
 ```
 make run
 ```
@@ -21,12 +33,9 @@ make run
 
 - You also can make deb package and run it as an init.d service. Read more in **Resm as a service**
 
-- Development machine has ubuntu trusty with Erlang/OTP 17.4 and ruby 2.1.5
-
 ## User guide
 
 ### Repl
-
 ```
 resm:allocate(partos).
 resm:list().
@@ -36,7 +45,6 @@ resm:deallocate(r1).
 ```
 
 ### WEB
-
 ```
 curl http://resm/allocate/partos
 curl http://resm/list
@@ -44,13 +52,12 @@ curl http://resm/list/partos
 curl http://resm/reset
 curl http://resm/deallocate/r1
 ```
-where resm - your server:port with this application
+where resm - your server:port with this application,
+192.168.10.10:8080 in our case
 
 ## Resm as a service
 
 If you want to have resm as a service you need to do next steps:
-
-* [Install ruby environment](https://www.ruby-lang.org/en/documentation/installation/) and [gem fpm](https://github.com/jordansissel/fpm)
 
 * Create deb package and install it
 ```
