@@ -8,7 +8,7 @@ compile:
 	$(REBAR) compile
 
 test: compileapp
-	ERL_FLAGS="-config $(CURDIR)/files/app" $(REBAR) ct skip_deps=true
+	ERL_FLAGS="-config $(CURDIR)/files/app" $(REBAR) ct -r skip_deps=true
 
 run: compileapp
 	erl -config $(CURDIR)/files/app -pa apps/*/ebin deps/*/ebin -s resm
