@@ -11,3 +11,4 @@
 logs/
 *.beam
 erl_crash.dump
+.vagrant/

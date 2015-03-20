@@ -1,0 +1,24 @@
+---
+- hosts: all
+  vars:
+    proxy_env:
+      LC_ALL: en_US.UTF-8
+      LC_LCTYPE: en_US.UTF-8
+      LC_MESSAGES: POSIX
+
+  roles:
+    - shared
+    - { role: azavea.ruby, tags: ruby, sudo: True, ruby_version: 2.1 }
+    - { role: ANXS.erlang, tags: erlang, sudo: True, erlang_version: "17.4" }
+
+  tasks:
+    - name: install ansible modules requirements
+      apt: pkg={{ item }} state=installed update_cache=yes cache_valid_time=3600
+      sudo: true
+      with_items:
+        - python-psycopg2
+        - python-pycurl
+        - python-apt
+        - curl
+        - libcurl4-gnutls-dev
+        - git
